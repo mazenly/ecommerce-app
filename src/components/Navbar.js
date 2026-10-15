@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { CartContext } from "../App";
+import { CartContext } from "../CartContext";
 
 export default function Navbar() {
   const { state } = useContext(CartContext);
@@ -16,7 +16,7 @@ export default function Navbar() {
       }}
     >
       <h2>متجري الإلكتروني</h2>
-      <h3>🛒 السلة: {totalItems} منتجات</h3>
+      <h3 data-testid="cart-count">🛒 السلة: {totalItems} منتجات</h3>
     </nav>
   );
 }

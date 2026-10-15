@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { CartContext } from "../App";
+import { CartContext } from "../CartContext";
 
 export default function Cart() {
   const { state, dispatch } = useContext(CartContext);
@@ -10,6 +10,7 @@ export default function Cart() {
 
   return (
     <div
+      data-testid="cart"
       style={{
         background: "#f9f9f9",
         padding: "15px",

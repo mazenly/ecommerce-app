@@ -1,12 +1,10 @@
-import React, { createContext, useReducer } from "react";
+import React, { useReducer } from "react";
+import { CartContext } from "./CartContext";
 import Navbar from "./components/Navbar";
 import ProductList from "./components/ProductList";
 import Cart from "./components/Cart";
 
-// 1. إنشاء الـ Context
-export const CartContext = createContext();
-
-// 2. الحالة الأولية (منتجات تجريبية متاحة + السلة فارغة)
+// 1. الحالة الأولية (منتجات تجريبية متاحة + السلة فارغة)
 const initialState = {
   products: [
     { id: 1, name: "لابتوب ديل", price: 800 },
@@ -16,25 +14,28 @@ const initialState = {
   cart: [],
 };
 
-// 3. دالة الـ Reducer للتحكم في العمليات
+// 2. دالة الـ Reducer للتحكم في العمليات
 const cartReducer = (state, action) => {
   switch (action.type) {
-    case "ADD_TO_CART":
-      const existingIndex = state.cart.findIndex(
-        (item) => item.id === action.payload.id,
-      );
-      if (existingIndex > -1) {
-        // إذا كان المنتج موجوداً مسبقاً، نزيد الكمية
-        const updatedCart = [...state.cart];
-        updatedCart[existingIndex].quantity += 1;
-        return { ...state, cart: updatedCart };
-      } else {
-        // إذا لم يكن موجوداً، نضيفه مع كمية 1
+    case "ADD_TO_CART": {
+      const exists = state.cart.some((item) => item.id === action.payload.id);
+      if (exists) {
+        // إذا كان المنتج موجوداً مسبقاً، نزيد الكمية (بدون تعديل الكائن الأصلي)
         return {
           ...state,
-          cart: [...state.cart, { ...action.payload, quantity: 1 }],
+          cart: state.cart.map((item) =>
+            item.id === action.payload.id
+              ? { ...item, quantity: item.quantity + 1 }
+              : item,
+          ),
         };
       }
+      // إذا لم يكن موجوداً، نضيفه مع كمية 1
+      return {
+        ...state,
+        cart: [...state.cart, { ...action.payload, quantity: 1 }],
+      };
+    }
 
     case "REMOVE_FROM_CART":
       return {
